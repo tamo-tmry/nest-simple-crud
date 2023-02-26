@@ -1,6 +1,15 @@
-import { Body, Controller, Get, Post, Patch, Param } from '@nestjs/common';
+import {
+  Body,
+  Controller,
+  Get,
+  Post,
+  Patch,
+  Param,
+  Delete,
+} from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateArticleDto } from './create-article.dto';
+import { DeleteArticleDto } from './delete-article.dto';
 import {
   UpdateArticleParamDto,
   UpdateArticleBodyDto,
@@ -34,6 +43,19 @@ export class ArticleController {
   ) {
     await this.prisma.article.update({
       data: article,
+      where: {
+        id: parseInt(param.id),
+      },
+    });
+
+    return {
+      success: 'true',
+    };
+  }
+
+  @Delete(':id')
+  async delete(@Param() param: DeleteArticleDto) {
+    await this.prisma.article.delete({
       where: {
         id: parseInt(param.id),
       },
