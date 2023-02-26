@@ -1,6 +1,10 @@
-import { Body, Controller, Get, Post } from '@nestjs/common';
+import { Body, Controller, Get, Post, Patch, Param } from '@nestjs/common';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { CreateArticleDto } from './create-article.dto';
+import {
+  UpdateArticleParamDto,
+  UpdateArticleBodyDto,
+} from './update-article.dto';
 
 @Controller('article')
 export class ArticleController {
@@ -16,6 +20,23 @@ export class ArticleController {
   async add(@Body() article: CreateArticleDto) {
     await this.prisma.article.create({
       data: article,
+    });
+
+    return {
+      success: 'true',
+    };
+  }
+
+  @Patch(':id')
+  async update(
+    @Param() param: UpdateArticleParamDto,
+    @Body() article: UpdateArticleBodyDto,
+  ) {
+    await this.prisma.article.update({
+      data: article,
+      where: {
+        id: parseInt(param.id),
+      },
     });
 
     return {
